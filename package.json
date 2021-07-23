@@ -1,0 +1,27 @@
+{
+  "name": "second-company-api",
+  "version": "1.0.0",
+  "description": "A Node API for adding movie shows from TV Maze API to wishlist for a React Frontend",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
+  },
+  "keywords": [
+    "nodejs",
+    "mongoose",
+    "express",
+    "react",
+    "api"
+  ],
+  "author": "Joseph Ibeawuchi",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "http-errors": "^1.8.0",
+    "mongoose": "^5.13.3",
+    "morgan": "^1.10.0"
+  }
+}
