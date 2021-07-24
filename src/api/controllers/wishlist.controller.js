@@ -26,19 +26,24 @@ module.exports = {
     
     saveToWishlist: async (req, res, next) => {
         try {
-            const { 
-                id, name
-            } = req.body;
+            const { id } = req.body;
 
-            const wishlist = Wishlist({id, name});
-            const savedWishlist = await wishlist.save();
+            let found = await Wishlist.find({id: id});
+            console.log(found);
+
+            if(!found) {
+                const wishlist = Wishlist({id});
+                const savedWishlist = await wishlist.save();
             
-            return res.status(201)
+                return res.status(201)
                       . json({
                           msg: `Movie with id ${id} Added to Wishlist`,
                           success: true,
                           movie: savedWishlist
-                    });
+                      });
+            }
+            return res.status(409)
+                      .json({success: false, msg: 'This movie is already in your wishlist'});
 
         } catch (err){
             console.log(err);
