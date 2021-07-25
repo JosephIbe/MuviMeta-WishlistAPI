@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const wishlistSchema = new mongoose.Schema({
-    id: Number
+    id: {type: Number},
 });
 
 module.exports = new mongoose.model('wishlist', wishlistSchema);

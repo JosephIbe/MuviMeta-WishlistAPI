@@ -1,9 +1,10 @@
 const Wishlist = require('../../models/wishlist.model');
+const axios = require('axios');
 
 module.exports = {
     fetchAll: async (req, res, next) => {
         try {
-            let wishlist = await Wishlist.find({});
+            const wishlist = await Wishlist.find({});
             if (wishlist == null) {
                 res.status(404)
                     .json({
@@ -12,38 +13,50 @@ module.exports = {
                         wishlist: []
                     })
             }
+            const idsArr = wishlist.map((item) => {
+                return item.id;
+            });
+            console.log(idsArr);
+            const promisesArr = idsArr.map(async (id) => {
+                const shows = await axios.get(`https://api.tvmaze.com/shows/${id}`);
+                return shows.data;
+            });
+            const showsArr = await Promise.all(promisesArr);
+            console.log(showsArr);
             return res.status(200)
                       .json({
                         success: true,
                         msg: 'All Movies in Wishlist Fetched',
-                        wishlist
+                        wishlist: showsArr
                       })
         } catch (err) {
             console.log(err);
             next(err);
         }
-    },
+    },  
     
     saveToWishlist: async (req, res, next) => {
         try {
             const { id } = req.body;
+            console.log(id);
 
-            let found = await Wishlist.find({id: id});
-            console.log(found);
+            // let found = await Wishlist.find({}).select({'id': id});
+            // console.log(found);
 
-            if(!found) {
-                const wishlist = Wishlist({id});
-                const savedWishlist = await wishlist.save();
+            // if(found) {
+            //     res.status(409)
+            //        .json({success: false, msg: 'This movie is already in your wishlist'});
+            // }
+
+            const wishlist = Wishlist({id});
+            const savedWishlist = await wishlist.save();
             
-                return res.status(201)
+            return res.status(201)
                       . json({
                           msg: `Movie with id ${id} Added to Wishlist`,
                           success: true,
                           movie: savedWishlist
                       });
-            }
-            return res.status(409)
-                      .json({success: false, msg: 'This movie is already in your wishlist'});
 
         } catch (err){
             console.log(err);
