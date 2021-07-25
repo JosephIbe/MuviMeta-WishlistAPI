@@ -25,6 +25,7 @@ module.exports = {
             console.log(showsArr);
             return res.status(200)
                       .json({
+                        length: showsArr.length,
                         success: true,
                         msg: 'All Movies in Wishlist Fetched',
                         wishlist: showsArr
@@ -40,13 +41,13 @@ module.exports = {
             const { id } = req.params;
             console.log(id);
 
-            // let found = await Wishlist.find({}).select({'id': id});
-            // console.log(found);
+            let found = await Wishlist.findOne({}).select({'id': id});
+            console.log(found);
 
-            // if(found) {
-            //     res.status(409)
-            //        .json({success: false, msg: 'This movie is already in your wishlist'});
-            // }
+            if(found) {
+                return res.status(409)
+                   .json({success: false, msg: 'This movie is already in your wishlist'});
+            }
 
             const wishlist = Wishlist({id});
             const savedWishlist = await wishlist.save();
@@ -64,5 +65,25 @@ module.exports = {
         }
     },
 
-    removeFromWishlist: async (req, res, next) => {}
+    removeFromWishlist: async (req, res, next) => {},
+
+    checkMovieExistsInWishlist: async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            console.log(id);
+
+            let found = await Wishlist.findOne({}).select({'id': id});
+            console.log(found);
+
+            if(found) {
+                return res.status(200)
+                          .json({success: true, msg: 'This movie exists in your wishlist'});
+            }
+            return res.status(404)
+                          .json({success: false, msg: 'This movie does not exist in your wishlist'});
+        } catch (err) {
+            console.log(err);
+            next(err);
+        }
+    }
 };

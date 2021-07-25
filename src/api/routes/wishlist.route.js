@@ -18,6 +18,13 @@ router.get('/add-movie/:id', wishlistController.saveToWishlist);
 router.get('/fetch-all', wishlistController.fetchAll);
 
 /**
+    @desc   Check if Movie Exists in Wishlist
+    @route  GET /api/v1/wishlist
+    @access Public
+*/
+router.get('/check-exists/:id', wishlistController.checkMovieExistsInWishlist);
+
+/**
  *  @desc   Remove movie from wishlist
  *  @route  DEL /api/v1/wishlist
  *  @access Public
