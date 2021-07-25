@@ -8,7 +8,7 @@ const router = express.Router();
     @route  POST /api/v1/wishlist
     @access Public
 */
-router.post('/add-movie', wishlistController.saveToWishlist);
+router.get('/add-movie/:id', wishlistController.saveToWishlist);
 
 /**
     @desc   Fetch All Movies in Wishlist

@@ -37,7 +37,7 @@ module.exports = {
     
     saveToWishlist: async (req, res, next) => {
         try {
-            const { id } = req.body;
+            const { id } = req.params;
             console.log(id);
 
             // let found = await Wishlist.find({}).select({'id': id});
