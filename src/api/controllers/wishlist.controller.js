@@ -73,7 +73,7 @@ module.exports = {
             const { id } = req.params;
             console.log(id);
 
-            let found = await Wishlist.findOne({}).select({'id': id});
+            let found = await Wishlist.findOne({'movieId': id});
             console.log(found);
 
             if(found) {
