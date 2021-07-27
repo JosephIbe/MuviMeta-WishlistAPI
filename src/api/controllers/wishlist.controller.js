@@ -41,7 +41,7 @@ module.exports = {
             const { id } = req.params;
             console.log(id);
 
-            let found = await Wishlist.findOne({}).select({'id': id});
+            let found = await Wishlist.findOne({'movieId': id});
             console.log(found);
 
             if(found) {
@@ -49,7 +49,8 @@ module.exports = {
                    .json({success: false, msg: 'This movie is already in your wishlist'});
             }
 
-            const wishlist = Wishlist({id});
+            const wishlist = Wishlist({movieId: id});
+            console.log(`wishlist to add\n ${wishlist}`);
             const savedWishlist = await wishlist.save();
             
             return res.status(201)
