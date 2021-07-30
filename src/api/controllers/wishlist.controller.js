@@ -5,6 +5,7 @@ module.exports = {
     fetchAll: async (req, res, next) => {
         try {
             const wishlist = await Wishlist.find({});
+            
             if (wishlist == null) {
                 res.status(404)
                     .json({
@@ -13,22 +14,30 @@ module.exports = {
                         wishlist: []
                     })
             }
-            const idsArr = wishlist.map((item) => {
-                return item.id;
+
+            const objectIds = wishlist.map((item) => item.id);
+            
+            const showsArr = objectIds.map( async (id) => {
+                const moviesFound = await Wishlist.find({'_id': id});
+
+                var shows;
+
+                var data = moviesFound.map( async (movie) => {
+                    shows = await axios.get(`https://api.tvmaze.com/shows/${movie.movieId}`);
+                    return shows.data;
+                });
+                console.log(data);
+                return Promise.all(data);
             });
-            console.log(idsArr);
-            const promisesArr = idsArr.map(async (id) => {
-                const shows = await axios.get(`https://api.tvmaze.com/shows/${id}`);
-                return shows.data;
-            });
-            const showsArr = await Promise.all(promisesArr);
-            console.log(showsArr);
+
+            const wishlistItems = await Promise.all(showsArr);
+
             return res.status(200)
                       .json({
                         length: showsArr.length,
                         success: true,
                         msg: 'All Movies in Wishlist Fetched',
-                        wishlist: showsArr
+                        wishlist: Array.prototype.concat.apply([], wishlistItems)
                       })
         } catch (err) {
             console.log(err);
